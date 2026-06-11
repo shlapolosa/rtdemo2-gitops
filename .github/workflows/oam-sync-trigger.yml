@@ -1,0 +1,28 @@
+name: OAM Sync Trigger
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'oam/applications/**'
+      - 'oam/components/**'
+  workflow_dispatch:
+
+jobs:
+  trigger-argocd-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Trigger ArgoCD Sync
+        run: |
+          echo "🔄 OAM files changed, triggering ArgoCD sync..."
+          # ArgoCD will automatically sync due to automated sync policy
+          # This workflow ensures the change is tracked and logged
+          
+      - name: Log OAM Changes
+        run: |
+          echo "📝 OAM Application changes detected:"
+          git diff HEAD~1 HEAD -- oam/applications/ oam/components/ || true
+          echo "✅ Changes will be synced to cluster via ArgoCD"
