@@ -2,9 +2,9 @@ apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
   name: rtdemo2
-  annotations:
-    app.oam.dev/publishVersion: "22a92c659cbf262c53f5bc96182e181a05a1ca52"
   namespace: default
+  annotations:
+    app.oam.dev/publishVersion: rt2-w5-v4
 spec:
   components:
   - name: rtdemo2-stream
@@ -25,6 +25,8 @@ spec:
     properties:
       name: rtdemo2-ingest
       language: python
+      environment:
+        RENDER_NUDGE: rt2-w5-v4
       realtime: rtdemo2-stream
       role: ingest
       websocket: false
@@ -40,6 +42,8 @@ spec:
     properties:
       name: rtdemo2-processor
       language: python
+      environment:
+        RENDER_NUDGE: rt2-w5-v4
       realtime: rtdemo2-stream
       role: processor
       websocket: false
@@ -57,6 +61,8 @@ spec:
     properties:
       name: rtdemo2-gateway
       language: python
+      environment:
+        RENDER_NUDGE: rt2-w5-v4
       realtime: rtdemo2-stream
       role: gateway
       websocket: true
