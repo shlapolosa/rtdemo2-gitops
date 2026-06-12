@@ -2,6 +2,8 @@ apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
   name: rtdemo2
+  annotations:
+    app.oam.dev/publishVersion: "22a92c659cbf262c53f5bc96182e181a05a1ca52"
   namespace: default
 spec:
   components:
