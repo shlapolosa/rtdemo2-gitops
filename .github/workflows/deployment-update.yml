@@ -111,6 +111,16 @@ jobs:
               echo "Updated image line:"
               grep "image:" "$MAIN_OAM" | head -1
               echo "✅ Updated main OAM manifest"
+              # 2026-06-12 image-pin fix: sed only REPLACES an existing image: line.
+              # Components rendered without one (e.g. realtime-service role services
+              # on rtdemo2) were never pinned and stayed on the CD :latest default.
+              # yq path-assignment ADDs-or-replaces properties.image for the built
+              # service, whatever its component type (yq v4 ships on ubuntu-latest).
+              if command -v yq >/dev/null 2>&1; then
+                SVC_NAME="$service" PIN_IMAGE="$NEW_IMAGE" yq -i '(.spec.components[] | select(.name == strenv(SVC_NAME)) | .properties.image) = strenv(PIN_IMAGE)' "$MAIN_OAM" && echo "Ensured properties.image pin via yq (add-or-replace)" || echo "WARNING: yq image pin failed (sed replacement already attempted)"
+              else
+                echo "WARNING: yq unavailable - sed replacement only"
+              fi
 
               # HARD-3 #170: bump app.oam.dev/publishVersion in lockstep with the
               # image re-pin. KubeVela digest-pins :latest into the FIRST Knative
